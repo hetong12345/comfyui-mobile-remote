@@ -14,9 +14,10 @@ const api = axios.create({
 // 生成图像函数
 export const generateImage = async (
   prompt: string,
+  negativePrompt: string = '',
   onProgress?: (progress: number, statusText: string, currentStep?: number, totalSteps?: number) => void
 ): Promise<ApiResponse> => {
-  const { settings } = useAppStore.getState();
+  const { settings, envConfig } = useAppStore.getState();
   
   if (!settings.apiUrl) {
     return {
@@ -24,6 +25,9 @@ export const generateImage = async (
       error: 'API URL not configured. Please set it in the settings.',
     };
   }
+  
+  // 如果没有提供负面提示词，使用环境变量中的默认值
+  const finalNegativePrompt = negativePrompt || envConfig.defaultNegativePrompt;
 
   try {
     // 更新生成状态
@@ -58,6 +62,7 @@ export const generateImage = async (
             "denoise": 1,
             "model": ["11", 0],
             "positive": ["6", 0],
+            "negative": ["7", 0],
             "latent_image": ["13", 0]
           },
           "class_type": "KSampler",
@@ -73,6 +78,16 @@ export const generateImage = async (
           "class_type": "CLIPTextEncode",
           "_meta": {
             "title": "CLIP Text Encode (Positive Prompt)"
+          }
+        },
+        "7": {
+          "inputs": {
+            "text": finalNegativePrompt,
+            "clip": ["42", 1]
+          },
+          "class_type": "CLIPTextEncode",
+          "_meta": {
+            "title": "CLIP Text Encode (Negative Prompt)"
           }
         },
         "8": {

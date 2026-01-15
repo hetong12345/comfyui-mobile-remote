@@ -13,6 +13,7 @@ const envConfig = {
   enableDebug: import.meta.env.VITE_ENABLE_DEBUG === 'true',
   defaultWidth: Number(import.meta.env.VITE_DEFAULT_WIDTH) || 1088,
   defaultHeight: Number(import.meta.env.VITE_DEFAULT_HEIGHT) || 1920,
+  defaultNegativePrompt: import.meta.env.VITE_DEFAULT_NEGATIVE_PROMPT || '',
 };
 
 interface AppState {

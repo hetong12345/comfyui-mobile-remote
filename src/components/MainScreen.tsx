@@ -284,7 +284,8 @@ const MainScreen: React.FC = () => {
       resetGenerationStatus();
       
       const response = await generateImage(
-        prompt
+        prompt,
+        useAppStore.getState().envConfig.defaultNegativePrompt // 使用环境变量中的默认负面提示词
       );
       
       if (response.success && response.data?.imageUrls) {
